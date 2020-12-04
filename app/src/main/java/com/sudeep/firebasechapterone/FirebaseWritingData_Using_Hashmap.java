@@ -1,5 +1,6 @@
 package com.sudeep.firebasechapterone;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -8,8 +9,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
@@ -19,6 +23,7 @@ public class FirebaseWritingData_Using_Hashmap extends AppCompatActivity {
     private EditText email;
     private  EditText phone;
    private Button saveBtn;
+   private Button ReadBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +34,7 @@ public class FirebaseWritingData_Using_Hashmap extends AppCompatActivity {
         email=findViewById(R.id.edt2);
         phone=findViewById(R.id.edt3);
         saveBtn=findViewById(R.id.saveBtn);
+        ReadBtn=findViewById(R.id.ReadBtn);
 
 
 
@@ -69,6 +75,31 @@ public class FirebaseWritingData_Using_Hashmap extends AppCompatActivity {
 
                     databaseReference.setValue(map);
                 }
+            }
+        });
+
+        ReadBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
+                DatabaseReference databaseReference= (DatabaseReference) firebaseDatabase.getReference().child("Donor").child("-MNgx4BAjWlGje0hNhPP")
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                String msg= "name:"+snapshot.child("name").getValue(String.class)+
+                                        "phone:"+snapshot.child("phone").getValue(String.class)
+                                        +"email:"+snapshot.child("email").getValue(String.class);
+
+                                Toast.makeText(FirebaseWritingData_Using_Hashmap.this, ""+msg, Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+
             }
         });
 
